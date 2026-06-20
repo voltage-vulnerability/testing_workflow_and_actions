@@ -6,8 +6,7 @@ on:
     branches:
       - main
       #- new_branch_for_actions
-  pull_request:
-    
+     
    branches:
 
 jobs:
