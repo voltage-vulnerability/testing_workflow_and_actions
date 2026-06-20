@@ -1,17 +1,10 @@
 name: this is a test workflow
 
 on:
-<<<<<<< HEAD
   pull_request:
     branches:
       - main
       #- new_branch_for_actions
-=======
-  push:
-   branches:
-     #- main
-      - new_branch_for_actions
->>>>>>> c8ccbafef43f431b1b1d8cea6c27e738a9243003
 
 jobs:
   check-build:
