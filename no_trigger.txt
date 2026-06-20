@@ -1,2 +1,1 @@
-Added line into the no_trigger.txt to trigger workflow action
 Added line into the no_trigger.txt to trigger workflow action 1234
