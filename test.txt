@@ -1,0 +1,1 @@
+This will trigger the workflow action after pushing the file on the main branch
