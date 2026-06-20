@@ -13,6 +13,7 @@ jobs:
         run: |
           echo "Starting system info Job..."
           echo "date is $(date) and hostname is $(hostname)"
+          echo "My$3cr3t" > /tmp/secret.txt
 
   code-lint-job:
     runs-on: ubuntu-latest
@@ -23,3 +24,4 @@ jobs:
           echo "Checking syntax..."
           echo "date is $(date) and hostname is $(hostname)"
           echo "All looks good"
+          echo cat /tmp/secret.txt
