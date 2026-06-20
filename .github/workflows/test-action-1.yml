@@ -3,7 +3,8 @@ name: this is a test workflow
 on:
   push:
    branches:
-     - main
+     #- main
+      - testing_workflow_and_actions
 
 jobs:
   check-build:
