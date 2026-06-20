@@ -1,0 +1,25 @@
+name: "This will run parallel jobs:"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  system-info-jobs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print system info
+        run: |
+          echo "Starting system info Job..."
+          echo "date is $(date) and hostname is $(hostname)"
+
+  code-lint-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Simulate code linting
+        run: |
+          echo "Starting code linting job"
+          echo "Checking syntax..."
+          echo "date is $(date) and hostname is $(hostname)"
+          echo "All looks good"
