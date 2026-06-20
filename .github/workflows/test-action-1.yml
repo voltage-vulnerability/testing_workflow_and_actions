@@ -1,13 +1,10 @@
 name: this is a test workflow
 
 on:
-
   pull_request:
     branches:
       - main
       #- new_branch_for_actions
-     
-   branches:
 
 jobs:
   check-build:
