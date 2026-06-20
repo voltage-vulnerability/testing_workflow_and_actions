@@ -1,10 +1,11 @@
 name: this is a test workflow
 
 on:
-  push:
+  #push:
+   pull  
    branches:
-     #- main
-      - new_branch_for_actions
+      - main
+     #- new_branch_for_actions
 
 jobs:
   check-build:
