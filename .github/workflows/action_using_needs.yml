@@ -18,7 +18,7 @@ jobs:
   # Job 2: This WAITS for compile-code to finish
   deploy-app:
     runs-on: ubuntu-latest
-    needs: compile-code # 👈 This keyword links the jobs together
+    needs: compile-code1 # 👈 This keyword links the jobs together
     steps:
       - name: Deploy step
         run: |
