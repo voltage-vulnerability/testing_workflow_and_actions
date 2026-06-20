@@ -1,19 +1,23 @@
 name: this is a test workflow
 
 on:
+
+  pull_request:
+    branches:
+      - main
+      #- new_branch_for_actions
   pull_request:
     
    branches:
-     - main
 
 jobs:
   check-build:
-   runs-on: ubuntu-latest
-   steps:
-    - name: print system info
-      run: |
-       echo "the current working dir is: $(pwd) "
-       date
-       hostname
-       cat /etc/passwd
-       echo "finished." 
+    runs-on: ubuntu-latest
+    steps:
+      - name: print system info
+        run: |
+          echo "the current working dir is: $(pwd) "
+          date
+          hostname
+          cat /etc/passwd
+          echo "finished."
