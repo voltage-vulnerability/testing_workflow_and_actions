@@ -1,7 +1,8 @@
 name: this is a test workflow
 
 on:
-  push:
+  pull_request:
+    
    branches:
      - main
 
