@@ -18,7 +18,7 @@ jobs:
       uses: aquasecurity/trivy-action@v0.35.0
       with:
        image-ref: "my-image:v1"
-       scan-type: 'fs'
+       scan-type: 'image'
        format: 'table'
 
        
