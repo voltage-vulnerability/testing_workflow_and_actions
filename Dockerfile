@@ -1,2 +1,2 @@
-FROM ubuntu:16.04
-CMD ["echo","Tested vulnerable image"]
+FROM alpine:3.10
+CMD ["echo","Testing vulnerable image"]
