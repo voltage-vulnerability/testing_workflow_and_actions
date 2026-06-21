@@ -1,2 +1,2 @@
-FROM ubuntu:18.04
+FROM python:3.7-slim-buster
 CMD ["echo","Testing vulnerable image"]
