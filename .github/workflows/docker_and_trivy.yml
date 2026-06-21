@@ -20,5 +20,6 @@ jobs:
        image-ref: "my-image:v1"
        scan-type: 'image'
        format: 'table'
+       severity: 'CRITICAL,HIGH,MEDIUM'
 
        
