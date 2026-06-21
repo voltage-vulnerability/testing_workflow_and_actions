@@ -23,5 +23,5 @@ jobs:
       with:
        image-ref: "."
        scan-type: 'fs'
-       format: 'table"
+       format: "table"
        
