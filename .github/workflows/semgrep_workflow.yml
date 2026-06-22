@@ -8,7 +8,7 @@ jobs:
   runs-on: ubuntu-latest
   steps:
     - name: Checkout Source code
-      uses: action/checkout@v4
+      uses: actions/checkout@v4
 
     - name: Run semgrep security scan
       uses: semgrep/github-action@v1
