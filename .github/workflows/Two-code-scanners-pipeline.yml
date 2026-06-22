@@ -1,0 +1,62 @@
+name: Secure DevSecOps Build and Scan Pipeline
+
+on:
+  workflow_dispatch:
+
+jobs:
+  # ⛓️ JOB 1: Semgrep Code Scanner (Runs in Semgrep Container)
+  semgrep-analysis:
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run semgrep code scan
+        run: |
+          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" || true
+
+  # ⛓️ JOB 2: GitHub CodeQL Scanner (Runs on Base Host Ubuntu Machine)
+  codeql-analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # Required to post results to GitHub Security tab
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Initializes the CodeQL tools and creates a blank tracking database
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: 'python' # Explicitly tells CodeQL to track Python text patterns
+
+      # Performs the structural analysis scan over your repository files
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:python"
+
+  # 🐳 JOB 3: This waits for BOTH security scanners to finish successfully
+  container-security-analysis:
+    runs-on: ubuntu-latest
+    # 👈 This bracket makes the job wait for BOTH code scanning blocks to pass
+    needs: [semgrep-analysis, codeql-analysis] 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Building docker Image
+        run: |
+          docker build -t app-image:v1 .
+
+      - name: Run trivy scan
+        uses: aquasecurity/trivy-action@v0.28.0
+        with:
+          image-ref: 'app-image:v1'
+          scan-type: 'image'
+          format: 'table'
+          exit-code: '0'
