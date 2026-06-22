@@ -28,7 +28,7 @@ jobs:
           docker build -t app-image:v1 .  # 👈 Added the missing trailing context dot
 
       - name: Run trivy scan
-        uses: aquasecurity/trivy-action@v0.28.0  # 👈 Fixed step indentation alignment
+        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1  # 👈 Fixed step indentation alignment
         with:
           image-ref: 'app-image:v1'
           scan-type: 'image'
