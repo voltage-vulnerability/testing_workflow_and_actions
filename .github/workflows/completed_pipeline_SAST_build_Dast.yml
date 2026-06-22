@@ -1,10 +1,16 @@
-name: SAST DOCKER DAST Pipeline
+name: Two Secure DevSecOps Build and Scan Pipeline
 
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  issues: write           # 🟢 FIX: Allows the ZAP DAST scan job to open issue tickets
+  security-events: write  # Required by CodeQL to post to the Security tab
+  actions: read
+
 jobs:
-  # 🧬 STAGE 1: Fast Code Linting
+  # ⛓️ JOB 1: Semgrep Code Scanner (Runs in Semgrep Container)
   semgrep-analysis:
     runs-on: ubuntu-latest
     container:
@@ -12,73 +18,70 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: Run Semgrep
-        run: semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" || true
 
-  # 🔬 STAGE 2: Deep Data-Flow Analysis
+      - name: Run semgrep code scan
+        run: |
+          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" || true
+
+  # ⛓️ JOB 2: GitHub CodeQL Scanner (Runs on Base Host Ubuntu Machine)
   codeql-analysis:
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
+      # Initializes the CodeQL tools and creates a blank tracking database
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
-          languages: 'python'
+          languages: 'python' # Explicitly tells CodeQL to track Python text patterns
+
+      # Performs the structural analysis scan over your repository files
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:python"
 
-  # 🐳 STAGE 3: Build & Scan Container Artifacts
-  container-build:
+  # 🐳 JOB 3: This waits for BOTH security scanners to finish successfully
+  container-security-analysis:
     runs-on: ubuntu-latest
-    needs: [semgrep-analysis, codeql-analysis] # Waits for both SAST scanners to pass
+    # 👈 This bracket makes the job wait for BOTH code scanning blocks to pass
+    needs: [semgrep-analysis, codeql-analysis] 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Building Docker Image
-        run: docker build -t app-image:v1 .
+      - name: Building docker Image
+        run: |
+          docker build -t app-image:v1 .
 
-      - name: Run Trivy Scan
-        uses: aquasecurity/trivy-action@v0.35.0
+      - name: Run trivy scan
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           image-ref: 'app-image:v1'
           scan-type: 'image'
           format: 'table'
           exit-code: '0'
 
-  # ⚡ STAGE 4: Live Runtime DAST Attack Phase
-  dynamic-application-testing:
+  # 🌐 JOB 4: DAST Scan (Runs after the container image is verified)
+  dast-analysis:
     runs-on: ubuntu-latest
-    needs: container-build # 👈 Only runs if the Docker image builds successfully
+    needs: [container-security-analysis] # Wait until the container builds and scans cleanly
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # DAST requires the app to be running. We build and run it directly on the runner machine.
-      - name: Boot Up Application in Background
+      # To run DAST, your application must be running. We spin up your container image here.
+      - name: Start Application Container
         run: |
-          docker build -t dast-target:latest .
-          # Run the container locally mapped to port 5000 in background mode (-d)
-          docker run -d -p 5000:5000 --name running-app dast-target:latest
-          
-          # Give the Flask server 5 seconds to fully initialize and wake up
-          sleep 5
-          
-          # Verify the local runner machine can successfully talk to the running web application
-          curl -I http://localhost:5000/profile
+          docker build -t app-image:v1 .
+          docker run -d -p 5000:5000 --name running-app app-image:v1
+          sleep 5 # Give the app a few seconds to boot up safely
 
-      # Launches the official OWASP ZAP Baseline scanner tool to attack localhost:5000
-      - name: Execute OWASP ZAP DAST Scan
+      - name: OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.14.0
         with:
-          target: 'http://localhost:5000'
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # 'true' ensures the pipeline stays green for your logs review even when vulnerabilities are found
-          fail_action: false 
+          target: 'http://localhost:5000' # Scans the container running inside the runner
+          create_issue: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
