@@ -8,8 +8,8 @@ from flask import Flask, request, render_template_string, make_response
 app = Flask(__name__)
 
 # ❌ ISSUE 1: Hardcoded sensitive credentials & API keys
-ADMIN_DB_PASSWORD = "SuperSecretAdminPassword2026!"
-AWS_SECRET_ACCESS_KEY = "AKIAIOSFODNN7EXAMPLE/secret/key/here"
+ADMIN_DB_PASSWORD = "p@ssword!_99831_secure_prod"
+AWS_SECRET_ACCESS_KEY = "AKIAUHBNDFXZ7R6QKL2M/vN72bXmKqP9zRt5wLc1v"
 
 # ❌ ISSUE 2: Weak cryptographic hashing algorithm (MD5)
 def hash_user_password(password):
