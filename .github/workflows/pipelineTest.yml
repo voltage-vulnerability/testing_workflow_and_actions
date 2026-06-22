@@ -14,7 +14,7 @@ jobs:
 
       - name: Run semgrep code scan
         run: |
-          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" #removed || true
+          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" --error #removed || true and added --error
   
   container-security-analysis:  # 👈 Added the missing unique Job ID name
     runs-on: ubuntu-latest
