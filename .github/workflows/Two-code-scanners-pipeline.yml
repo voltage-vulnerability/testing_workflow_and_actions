@@ -1,4 +1,4 @@
-name: Secure DevSecOps Build and Scan Pipeline
+name: Two Secure DevSecOps Build and Scan Pipeline
 
 on:
   workflow_dispatch:
