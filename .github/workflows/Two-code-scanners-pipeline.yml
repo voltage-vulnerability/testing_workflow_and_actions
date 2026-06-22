@@ -15,7 +15,7 @@ jobs:
 
       - name: Run semgrep code scan
         run: |
-          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --include="app.py" || true
+          semgrep scan --config=p/security-audit --config=p/python --config=p/owasp-top-ten --confir=p/secrets --include="app.py" || true
 
   # ⛓️ JOB 2: GitHub CodeQL Scanner (Runs on Base Host Ubuntu Machine)
   codeql-analysis:
