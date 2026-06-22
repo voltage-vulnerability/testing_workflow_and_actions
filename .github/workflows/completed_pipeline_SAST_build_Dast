@@ -1,4 +1,4 @@
-name: First Secure DevSecOps SAST, Build, and DAST Pipeline
+name: SAST DOCKER DAST Pipeline
 
 on:
   workflow_dispatch:
