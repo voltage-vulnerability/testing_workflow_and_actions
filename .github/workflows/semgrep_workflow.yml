@@ -6,13 +6,13 @@ on:
 jobs:
  semgrep-scan:
   runs-on: ubuntu-latest
+  container:
+    image: semgrep/semgrep
   steps:
     - name: Checkout Source code
       uses: actions/checkout@v4
 
     - name: Run semgrep security scan
-      uses: semgrep/github-action@v1
-      with:
-       config: 'p/security-audit'
-       auditOnInvalidConfig: true
+      run: |
+       semgrep scan --config=p/security-audit --error
         
