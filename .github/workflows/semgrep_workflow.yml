@@ -14,5 +14,5 @@ jobs:
 
     - name: Run semgrep security scan
       run: |
-       semgrep scan --config=p/security-audit || true
+       semgrep scan --config=p/security-audit --config=p/python  --include='app.py' --config=p/owasp-top-10 || true
         
