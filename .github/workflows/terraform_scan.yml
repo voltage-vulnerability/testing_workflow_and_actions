@@ -25,5 +25,6 @@ jobs:
    steps:
      - uses: actions/checkout@v4
      - uses: tenable/terrascan-action@main
-       iac_type: 'terraform'
+       with:
+         iac_type: 'terraform'
          verbose: true
