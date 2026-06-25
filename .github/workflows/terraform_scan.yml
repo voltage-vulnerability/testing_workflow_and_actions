@@ -26,7 +26,7 @@ jobs:
    runs-on: ubuntu-latest
    steps:
      - uses: actions/checkout@v4
-     - uses: tenable/terrascan-action@main
+     - uses: tenable/terrascan-action@v1.4.1
        with:
          iac_type: 'terraform'
          verbose: true
