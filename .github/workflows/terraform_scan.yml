@@ -18,7 +18,9 @@ jobs:
      - uses: actions/checkout@v4
      - uses: aquasecurity/tfsec-action@v1.0.0
        with:
-         additional_args: --concise
+         scan-type: "config"
+         hide-progress: true
+         exit-code: '1'
          
   terrafom-scn-using-nessus-tfscan:
    runs-on: ubuntu-latest
