@@ -9,9 +9,22 @@ jobs:
    steps:
      - uses: actions/checkout@v4
      - uses: bridgecrewio/checkov-action@master
+       with:
+         quiet: true
   
   terraform-scan-using-trivy:
    runs-on: ubuntu-latest
    steps:
      - uses: actions/checkout@v4
      - uses: aquasecurity/tfsec-action@v1.0.0
+       with:
+         additional_args: --concise
+         
+  terrafom-scn-using-nessus-tfscan:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v4
+     - uses: tenable/terrascan-action@main
+       iac_type: 'terraform'
+         verbose: true  
+  
